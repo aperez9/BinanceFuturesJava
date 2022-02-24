@@ -3,37 +3,25 @@ package com.binance.client.model.market;
 import com.binance.client.constant.BinanceApiConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import java.math.BigDecimal;
 
 public class ExchangeInfoEntry {
 
     private String symbol;
-
     private String status;
-
+    private String contractType;
     private BigDecimal maintMarginPercent;
-
     private BigDecimal requiredMarginPercent;
-
     private String baseAsset;
-
     private String quoteAsset;
-
     private Long pricePrecision;
-
     private Long quantityPrecision;
-
     private Long baseAssetPrecision;
-
     private Long quotePrecision;
-
     private List<String> orderTypes;
-
     private List<String> timeInForce;
-
     private List<List<Map<String, String>>> filters;
 
     public String getSymbol() {
@@ -50,6 +38,14 @@ public class ExchangeInfoEntry {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(String contractType) {
+        this.contractType = contractType;
     }
 
     public BigDecimal getMaintMarginPercent() {
