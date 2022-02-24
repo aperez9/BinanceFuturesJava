@@ -200,7 +200,7 @@ class RestApiRequestImpl {
                 ExchangeInfoEntry symbol = new ExchangeInfoEntry();
                 symbol.setSymbol(item.getString("symbol"));
                 symbol.setStatus(item.getString("status"));
-                symbol.setStatus(item.getString("contractType"));
+                symbol.setContractType(item.getString("contractType"));
                 symbol.setMaintMarginPercent(item.getBigDecimal("maintMarginPercent"));
                 symbol.setRequiredMarginPercent(item.getBigDecimal("requiredMarginPercent"));
                 symbol.setBaseAsset(item.getString("baseAsset"));
