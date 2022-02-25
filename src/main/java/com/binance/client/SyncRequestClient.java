@@ -180,6 +180,8 @@ public interface SyncRequestClient {
                     String newClientOrderId, String stopPrice, String closePosition, String activationPrice,
                     String callbackRate, WorkingType workingType, String priceProtect, NewOrderRespType newOrderRespType);
 
+    Order postOrder(OrderRequest orderRequest);
+
     /**
      * Cancel an active order.
      *

@@ -110,7 +110,15 @@ public class SyncRequestImpl implements SyncRequestClient {
                 timeInForce, quantity, reduceOnly, price, newClientOrderId, stopPrice,
                  closePosition, activationPrice, callbackRate, workingType, priceProtect, newOrderRespType));
     }
-    
+
+    @Override
+    public Order postOrder(OrderRequest orderRequest) {
+        return RestApiInvoker.callSync(requestImpl.postOrder(orderRequest.getSymbol(), orderRequest.getSide(),
+                null, orderRequest.getOrderType(), orderRequest.getTimeInForce(), orderRequest.getQuantity(),
+                null, orderRequest.getPrice(), null, orderRequest.getStopPrice(),
+                null, null, null, null, null, orderRequest.getNewOrderRespType()));
+    }
+
     @Override
     public Order cancelOrder(String symbol, Long orderId, String origClientOrderId) {
         return RestApiInvoker.callSync(requestImpl.cancelOrder(symbol, orderId, origClientOrderId));
