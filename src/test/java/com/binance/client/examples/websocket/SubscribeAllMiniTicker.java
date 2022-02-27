@@ -4,14 +4,12 @@ import com.binance.client.SubscriptionClient;
 
 public class SubscribeAllMiniTicker {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         SubscriptionClient client = SubscriptionClient.create();
-   
-        client.subscribeAllMiniTickerEvent(((event) -> {
-            System.out.println(event);
-        }), null);
+        client.subscribeAllMiniTickerEvent((System.out::println), null);
 
+        Thread.sleep(120000);
+        client.unsubscribeAll();
     }
-
 }

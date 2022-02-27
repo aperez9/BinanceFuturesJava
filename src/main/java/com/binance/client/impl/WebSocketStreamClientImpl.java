@@ -40,7 +40,7 @@ public class WebSocketStreamClientImpl implements SubscriptionClient {
             watchDog = new WebSocketWatchDog(options);
         }
         WebSocketConnection connection = new WebSocketConnection(request, watchDog, autoClose);
-        if (autoClose == false) {
+        if (!autoClose) {
             connections.add(connection);
         }
         connection.connect();

@@ -1,16 +1,14 @@
 package com.binance.client.impl;
 
+import com.binance.client.constant.BinanceApiConstants;
+import com.binance.client.exception.BinanceApiException;
+import com.binance.client.impl.utils.JsonWrapper;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.binance.client.SubscriptionOptions;
-import com.binance.client.constant.BinanceApiConstants;
-import com.binance.client.exception.BinanceApiException;
-import com.binance.client.impl.utils.JsonWrapper;
 
 public class WebSocketConnection extends WebSocketListener {
 
@@ -19,7 +17,7 @@ public class WebSocketConnection extends WebSocketListener {
     private static int connectionCounter = 0;
 
     public enum ConnectionState {
-        IDLE, DELAY_CONNECT, CONNECTED, CLOSED_ON_ERROR
+        IDLE, DELAY_CONNECT, CONNECTING, CONNECTED, CLOSING, CLOSE, CLOSED_ON_ERROR
     }
 
     private WebSocket webSocket = null;
@@ -47,8 +45,7 @@ public class WebSocketConnection extends WebSocketListener {
         this.request = request;
         this.autoClose = autoClose;
 
-        this.okhttpRequest = request.authHandler == null ? new Request.Builder().url(subscriptionUrl).build()
-                : new Request.Builder().url(subscriptionUrl).build();
+        this.okhttpRequest = new Request.Builder().url(subscriptionUrl).build();
         this.watchDog = watchDog;
         log.info("[Sub] Connection [id: " + this.connectionId + "] created for " + request.name);
     }
@@ -62,6 +59,11 @@ public class WebSocketConnection extends WebSocketListener {
             log.info("[Sub][" + this.connectionId + "] Already connected");
             return;
         }
+        if (state == ConnectionState.CONNECTING) {
+            log.info("[Sub][" + this.connectionId + "] Already connecting");
+            return;
+        }
+        state = ConnectionState.CONNECTING;
         log.info("[Sub][" + this.connectionId + "] Connecting...");
         webSocket = RestApiInvoker.createWebSocket(okhttpRequest, this);
     }
@@ -156,9 +158,17 @@ public class WebSocketConnection extends WebSocketListener {
     }
 
     public void close() {
-        log.info("[Sub][" + this.connectionId + "] Closing normally");
+        log.info("[Sub][" + this.connectionId + "] Trying to close normally");
+        this.state = ConnectionState.CLOSING;
+
+        /*
         webSocket.cancel();
         webSocket = null;
+         */
+
+        int code = 1000;
+        this.onClosing(webSocket, code, "");
+        webSocket.close(code, null);
         watchDog.onClosedNormally(this);
     }
 
@@ -167,6 +177,9 @@ public class WebSocketConnection extends WebSocketListener {
         super.onClosed(webSocket, code, reason);
         if (state == ConnectionState.CONNECTED) {
             state = ConnectionState.IDLE;
+        } else {
+            log.info("[Sub][" + this.connectionId + "] Closed");
+            this.state = ConnectionState.CLOSE;
         }
     }
 
@@ -186,8 +199,10 @@ public class WebSocketConnection extends WebSocketListener {
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-        onError("Unexpected error: " + t.getMessage(), t);
-        closeOnError();
+        if (this.state != ConnectionState.CLOSING) {
+            onError("Unexpected error: " + t.getMessage(), t);
+            closeOnError();
+        }
     }
 
     private void closeOnError() {
