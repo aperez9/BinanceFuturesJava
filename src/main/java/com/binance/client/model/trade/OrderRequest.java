@@ -81,13 +81,13 @@ public class OrderRequest {
                 quantity, price, null, NewOrderRespType.RESULT);
     }
 
-    public static OrderRequest stopLossBuy(String symbol, String quantity, String price) {
+    public static OrderRequest stopLossBuy(String symbol, String quantity, String price, String stopPrice) {
         return new OrderRequest(symbol, OrderSide.BUY, OrderType.STOP, TimeInForce.GTC,
-                quantity, price, price, NewOrderRespType.RESULT);
+                quantity, price, stopPrice, NewOrderRespType.RESULT);
     }
 
-    public static OrderRequest stopLossSell(String symbol, String quantity, String price) {
+    public static OrderRequest stopLossSell(String symbol, String quantity, String price, String stopPrice) {
         return new OrderRequest(symbol, OrderSide.SELL, OrderType.STOP, TimeInForce.GTC,
-                quantity, price, price, NewOrderRespType.RESULT);
+                quantity, price, stopPrice, NewOrderRespType.RESULT);
     }
 }

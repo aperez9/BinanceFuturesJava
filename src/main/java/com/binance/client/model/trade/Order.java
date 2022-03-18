@@ -1,6 +1,7 @@
 package com.binance.client.model.trade;
 
 import com.binance.client.constant.BinanceApiConstants;
+import com.binance.client.model.enums.OrderType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
@@ -8,57 +9,35 @@ import java.math.BigDecimal;
 public class Order {
 
     private String clientOrderId;
-
     private BigDecimal cumQty;
-
     private BigDecimal cumQuote;
-
     private BigDecimal executedQty;
-
     private Long orderId;
-
     private BigDecimal avgPrice;
-
     private BigDecimal origQty;
-
     private BigDecimal price;
-
     private Boolean reduceOnly;
-
     private String side;
-
     private String positionSide;
-
     private String status;
-
     private BigDecimal stopPrice;
-
     private Boolean closePosition;
-
     private String symbol;
-
     private String timeInForce;
-
-    private String type;
-
-    private String origType;
-
+    private OrderType type;
+    private OrderType origType;
     private BigDecimal activatePrice;
-
     private BigDecimal priceRate;
-
     private Long updateTime;
-
     private String workingType;
-
     private Boolean priceProtect;
 
-    public String getOrigType() {
+    public OrderType getOrigType() {
         return origType;
     }
 
     public void setOrigType(String origType) {
-        this.origType = origType;
+        this.origType = OrderType.valueOf(origType);
     }
 
     public BigDecimal getActivatePrice() {
@@ -203,12 +182,12 @@ public class Order {
         this.timeInForce = timeInForce;
     }
 
-    public String getType() {
+    public OrderType getType() {
         return type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = OrderType.valueOf(type);
     }
 
     public Long getUpdateTime() {

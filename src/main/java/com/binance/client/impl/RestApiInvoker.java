@@ -1,15 +1,10 @@
 package com.binance.client.impl;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.binance.client.exception.BinanceApiException;
 import com.binance.client.impl.utils.JsonWrapper;
+import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class RestApiInvoker {
 
@@ -27,7 +22,7 @@ abstract class RestApiInvoker {
                         throw new BinanceApiException(BinanceApiException.EXEC_ERROR, "[Executing] " + err_msg);
                     } else {
                         throw new BinanceApiException(BinanceApiException.EXEC_ERROR,
-                                "[Executing] " + err_code + ": " + err_msg);
+                                "[Executing] " + err_code + ": " + err_msg, Integer.valueOf(err_code));
                     }
                 }
             } else if (json.containKey("code")) {
@@ -36,7 +31,7 @@ abstract class RestApiInvoker {
                 if (code != 200) {
                     String message = json.getStringOrDefault("msg", "");
                     throw new BinanceApiException(BinanceApiException.EXEC_ERROR,
-                            "[Executing] " + code + ": " + message);
+                            "[Executing] " + code + ": " + message, code);
                 }
             }
         } catch (BinanceApiException e) {
@@ -52,8 +47,7 @@ abstract class RestApiInvoker {
             String str;
             log.debug("Request URL " + request.request.url());
             Response response = client.newCall(request.request).execute();
-            // System.out.println(response.body().string());
-            if (response != null && response.body() != null) {
+            if (response.body() != null) {
                 str = response.body().string();
                 response.close();
             } else {
