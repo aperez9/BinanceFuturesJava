@@ -90,4 +90,14 @@ public class OrderRequest {
         return new OrderRequest(symbol, OrderSide.SELL, OrderType.STOP, TimeInForce.GTC,
                 quantity, price, stopPrice, NewOrderRespType.RESULT);
     }
+
+    public static OrderRequest stopLossMarketBuy(String symbol, String quantity, String stopPrice) {
+        return new OrderRequest(symbol, OrderSide.BUY, OrderType.STOP_MARKET, TimeInForce.GTC,
+                quantity, null, stopPrice, NewOrderRespType.RESULT);
+    }
+
+    public static OrderRequest stopLossMarketSell(String symbol, String quantity, String stopPrice) {
+        return new OrderRequest(symbol, OrderSide.SELL, OrderType.STOP_MARKET, TimeInForce.GTC,
+                quantity, null, stopPrice, NewOrderRespType.RESULT);
+    }
 }
