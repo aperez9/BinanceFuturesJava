@@ -13,7 +13,9 @@ public class OrderRequest {
     private String quantity;
     private String price;
     private String stopPrice;
+    private String reduceOnly;
     private NewOrderRespType newOrderRespType;
+
 
     private OrderRequest(
             String symbol, OrderSide side,
@@ -27,6 +29,7 @@ public class OrderRequest {
         this.price = price;
         this.stopPrice = stopPrice;
         this.newOrderRespType = newOrderRespType;
+        this.reduceOnly = String.valueOf(false);
     }
 
     public String getSymbol() {
@@ -59,6 +62,15 @@ public class OrderRequest {
 
     public NewOrderRespType getNewOrderRespType() {
         return newOrderRespType;
+    }
+
+    public String getReduceOnly() {
+        return reduceOnly;
+    }
+
+    public OrderRequest reduceOnly(boolean reduceOnly) {
+        this.reduceOnly = String.valueOf(reduceOnly);
+        return this;
     }
 
     public static OrderRequest marketBuy(String symbol, String quantity) {
